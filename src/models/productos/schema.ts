@@ -17,8 +17,6 @@ export const schema = new Schema<Productos>(
       type: Number,
     },
 
-    categoria: Types.ObjectId,
-
     descripcion: {
       type: String,
     },

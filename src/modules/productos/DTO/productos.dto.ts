@@ -4,16 +4,18 @@ export class ProductosDto {
   @IsNotEmpty()
   name: string;
 
-  precioUnitario: string;
+  @IsNotEmpty()
+  precioUnitario: number;
 
-  costoUnitario: string;
+  @IsNotEmpty()
+  costoUnitario: number;
 
-  categoria: string;
+ 
 
   descripcion: string;
 
   @IsNotEmpty()
-  cantidadDisp: string;
+  cantidadDisp: number;
 
   img: string;
 }
