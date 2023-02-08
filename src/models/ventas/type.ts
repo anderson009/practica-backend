@@ -1,9 +1,19 @@
-export type Ventas = {
+import { Types } from 'mongoose';
+export enum Tipos {
+  VENTAS = 'ventas',
+  Gastos = 'gastos',
+}
+
+export type Movimientos = {
   id?: string;
   _id?: string;
-  products: { products: string; cantidad: number }[];
-  total: number;
+  type: Tipos;
+  products: { products: Types.ObjectId; cantidad: number }[];
+  totalVentas: number;
+  totalGastos: number;
   metodoDePago: string;
   concepto: string;
-  fecha: Date;
+  categoria: string;
+  ganancia: number;
+  fecha: any;
 };

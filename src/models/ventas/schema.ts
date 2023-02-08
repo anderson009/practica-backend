@@ -1,15 +1,32 @@
 import { OPTIONS_SCHEMA } from '../options';
 import { Schema, Types } from 'mongoose';
-import { Ventas } from './type';
+import { Tipos, Movimientos } from './type';
 
-export const schema = new Schema<Ventas>(
+export const schema = new Schema<Movimientos>(
   {
     products: {
       type: [{ products: Types.ObjectId, cantidad: Number }],
-      required: true,
     },
 
-    total: {
+    type: {
+      type: String,
+      required: true,
+      enum: Object.values(Tipos),
+    },
+
+    categoria: {
+      type: String,
+    },
+
+    totalVentas: {
+      type: Number,
+    },
+
+    ganancia: {
+      type: Number,
+    },
+
+    totalGastos: {
       type: Number,
     },
 
@@ -22,8 +39,7 @@ export const schema = new Schema<Ventas>(
     },
 
     fecha: {
-      type: Date,
-      default: new Date(),
+      type: String,
     },
   },
   OPTIONS_SCHEMA,

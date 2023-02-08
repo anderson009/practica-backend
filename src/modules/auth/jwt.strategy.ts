@@ -1,32 +1,32 @@
-import { AppConfig } from './../../config/config';
-import { AuthService } from './services/auth.service';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserModel, providerUserModel } from '../../models/user/index';
-import { InjectModel } from '@nestjs/mongoose';
+import { PassportStrategy } from '@nestjs/passport';
+import { Request } from 'express';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { AuthService } from './auth.service';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private readonly authService: AuthService,
-    @InjectModel(providerUserModel.name)
-    private readonly userModel: typeof UserModel,
-  ) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt_users') {
+  constructor(private readonly authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: AppConfig.tokenSecret,
+      secretOrKey: 'secretKey',
+      passReqToCallback: true,
     });
   }
 
-  async validate(payload: any): Promise<any> {
-    const { email } = payload;
-    const user = await this.userModel.findOne({ email: email });
+  async validate(
+    request: Request,
+    payload: { sub: string; charId: number },
+  ): Promise<any> {
+    const result = await this.authService.getDataUser(payload.sub);
 
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-    return user;
+    if (!result) throw new UnauthorizedException();
+
+    request.dataUser = result;
+
+    const responJwt = { sub: payload.sub };
+
+    return responJwt;
   }
 }

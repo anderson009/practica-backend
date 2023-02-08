@@ -2,10 +2,13 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
   Post,
+  Put,
+  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -30,7 +33,27 @@ export class VentasController {
   @Get('/')
   async getVentas(): Promise<VentasEntity[]> {
     const ventas = await this.appService.getVentas();
-    return ventas.map((el) => new VentasEntity(el));
+    return ventas.map(
+      (el) =>
+        new VentasEntity({
+          id: el._id,
+          categoria: el.categoria,
+          concepto: el.concepto,
+          fecha: el.fecha,
+          metodoDePago: el.metodoDePago,
+          products: el.products,
+          totalGastos: el.totalGastos,
+          totalVentas: el.totalVentas,
+          type: el.type,
+        }),
+    );
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/yo/:id')
+  async getV(@Param('id') id: any): Promise<any> {
+    const ventas = await this.appService.getProducts(id);
+    return ventas;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -45,5 +68,24 @@ export class VentasController {
       ...venta,
       productos: productos,
     });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('/delete/:id')
+  async deleteMovimiento(@Param('id') id: any) {
+    return await this.appService.deleteMoviento(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/put/:id')
+  async putAlumno(@Param('id') id: any, @Body() DTO: VentasDto): Promise<any> {
+    await this.appService.updateMovimiento(DTO, id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/get/:fecha')
+  async getVe(@Param('fecha') fecha: any): Promise<any> {
+    const ventas = await this.appService.getVentasDate(fecha);
+    return ventas;
   }
 }

@@ -5,7 +5,7 @@ export class VentasDto {
   products: [];
 
   @IsNotEmpty()
-  total: number;
+  totalVentas: number;
 
   @IsNotEmpty()
   concepto: number;

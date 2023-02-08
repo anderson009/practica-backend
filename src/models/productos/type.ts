@@ -7,5 +7,6 @@ export type Productos = {
   categoria: string;
   descripcion: string;
   cantidadDisp?: number;
+  ganacia: number;
   img: string;
 };

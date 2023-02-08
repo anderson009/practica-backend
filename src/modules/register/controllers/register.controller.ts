@@ -33,7 +33,7 @@ export class RegisterController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/my_profile')
+  @Get('/my_profile/:id')
   async login(@Param('id') id: any): Promise<any> {
     const user = await this.appService.getMyProfile(id);
     return user;

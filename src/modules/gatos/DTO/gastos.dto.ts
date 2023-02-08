@@ -5,7 +5,7 @@ export class gastosDto {
   categoria: string;
 
   @IsNotEmpty()
-  montoTotal: number;
+  totalGastos: number;
 
   @IsNotEmpty()
   concepto: string;

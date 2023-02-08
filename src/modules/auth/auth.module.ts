@@ -2,11 +2,10 @@ import { AppConfig } from './../../config/config';
 import { providerUserModel } from './../../models/user';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Module } from '@nestjs/common';
-import { AuthService } from './services/auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
-import { LoginController } from './controllers/auth.controller';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [
@@ -20,8 +19,8 @@ import { LoginController } from './controllers/auth.controller';
       },
     }),
   ],
-  controllers: [LoginController],
+ 
   providers: [AuthService, JwtStrategy],
-  exports: [AuthService, PassportModule, JwtStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

@@ -1,12 +1,12 @@
-import { Ventas } from './type';
+import { Movimientos } from './type';
 import { schema } from './schema';
 import { model } from 'mongoose';
 
-export const providerVentasModel = {
-  name: 'VENTAS_MODEL',
+export const movimientosProvider = {
+  name: 'MOVIMIENTOS_MODEL',
   schema: schema,
-  collection: 'ventas',
+  collection: 'movimientos',
 };
 
-export const VentasModel = model<Ventas>('Ventas', schema);
-export { Ventas } from './type';
+export const MovimientosModel = model<Movimientos>('Movimientos', schema);
+export { Movimientos } from './type';

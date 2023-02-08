@@ -17,6 +17,10 @@ export const schema = new Schema<Productos>(
       type: Number,
     },
 
+    ganacia: {
+      type: Number,
+    },
+
     descripcion: {
       type: String,
     },

@@ -1,17 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { providerGastosModel, GastosModel } from '../../../models/gastos/index';
 import { gastosDto } from '../DTO/gastos.dto';
+import { Tipos } from '../../../models/ventas/type';
+import {
+  movimientosProvider,
+  MovimientosModel,
+} from '../../../models/ventas/index';
 
 @Injectable()
 export class GastosServices {
   constructor(
-    @InjectModel(providerGastosModel.name)
-    private readonly gastosModel: typeof GastosModel,
+    @InjectModel(movimientosProvider.name)
+    private readonly gastosModel: typeof MovimientosModel,
   ) {}
 
   async createGasto(dto: gastosDto): Promise<any> {
-    const newGasto = new this.gastosModel(dto);
+    const newGasto = new this.gastosModel({
+      categoria: dto.categoria,
+      totalGastos: dto.totalGastos,
+      concepto: dto.concepto,
+      metodoDePago: dto.metodoDePago,
+      fecha: new Date().toDateString(),
+      type: Tipos.Gastos,
+    });
 
     await newGasto.save();
 
@@ -24,5 +35,4 @@ export class GastosServices {
 
     return gastos;
   }
-
 }

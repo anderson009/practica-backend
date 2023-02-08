@@ -15,11 +15,7 @@ export class ProductsEntity {
   @Expose()
   precioUnitario: number;
 
-  @Expose()
   costoUnitario: number;
-
-  @Expose()
-  ganancia: number;
 
   @Expose()
   total: number;
@@ -33,7 +29,7 @@ export class ProductsEntity {
 }
 
 @Exclude()
-export class VentasEntity {
+export class ProductosEntity {
   @Expose()
   @Transform(({ value, obj }) => {
     if (obj['_id']) return obj['_id'].toString();
@@ -42,35 +38,27 @@ export class VentasEntity {
   id: string;
 
   @Expose()
-  metodoDePago: string;
+  name: string;
 
   @Expose()
-  type: 'ventas' | 'gastos';
+  precioUnitario: number;
 
   @Expose()
-  fecha: Date;
+  costoUnitario: number;
 
   @Expose()
-  concepto: string;
+  costoTotal: number;
 
-  @Expose()
-  totalVentas: number;
+  precioTotal: number;
 
   @Expose()
   categoria: string;
 
   @Expose()
-  totalGastos: number;
+  descripcion: string;
 
   @Expose()
-  ganancia: number;
-
-  @Expose()
-  @Type(() => ProductsEntity)
-  productos: [];
-
-  @Expose()
-  productosTotales: number;
+  cantidadDisp: number;
 
   constructor(partial: Partial<any>) {
     Object.assign(this, partial);

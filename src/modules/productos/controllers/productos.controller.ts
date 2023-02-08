@@ -10,6 +10,7 @@ import {
 import { ProductosService } from '../services/productos.service';
 import { ProductosDto } from '../DTO/productos.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { ProductosEntity } from '../entity/productos.entity';
 
 @Controller('api/products')
 export class ProductosController {
@@ -26,9 +27,16 @@ export class ProductosController {
   @UseGuards(JwtAuthGuard)
   @Get('/')
   @HttpCode(200)
-  async getProducts(): Promise<any> {
+  async getProducts(): Promise<ProductosEntity[]> {
     const products = await this.appService.getProducts();
-    return products;
+    return products.map(
+      (el) =>
+        new ProductosEntity({
+          ...el,
+          costoTotal: el.costoUnitario * el.cantidadDisp,
+          precioTotal: el.precioUnitario * el.cantidadDisp,
+        }),
+    );
   }
 
   @UseGuards(JwtAuthGuard)

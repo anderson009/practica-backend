@@ -10,8 +10,6 @@ export class ProductosDto {
   @IsNotEmpty()
   costoUnitario: number;
 
- 
-
   descripcion: string;
 
   @IsNotEmpty()
