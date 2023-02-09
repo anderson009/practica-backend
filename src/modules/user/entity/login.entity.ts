@@ -11,6 +11,9 @@ export class LoginEntity {
   @Expose()
   img: string;
 
+  @Expose()
+  token: any;
+
   constructor(partial: Partial<LoginEntity>) {
     Object.assign(this, partial);
   }

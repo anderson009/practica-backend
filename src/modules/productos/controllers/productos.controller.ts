@@ -11,6 +11,8 @@ import { ProductosService } from '../services/productos.service';
 import { ProductosDto } from '../DTO/productos.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { ProductosEntity } from '../entity/productos.entity';
+import { UserAuth } from '../../../decorators/user-auth.decorator';
+import { DataUserAuth } from '../../../interfaces/userAuth';
 
 @Controller('api/products')
 export class ProductosController {
@@ -24,19 +26,11 @@ export class ProductosController {
     return registerUser;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, UserAuth)
   @Get('/')
   @HttpCode(200)
-  async getProducts(): Promise<ProductosEntity[]> {
-    const products = await this.appService.getProducts();
-    return products.map(
-      (el) =>
-        new ProductosEntity({
-          ...el,
-          costoTotal: el.costoUnitario * el.cantidadDisp,
-          precioTotal: el.precioUnitario * el.cantidadDisp,
-        }),
-    );
+  async getProducts(@UserAuth() userAuth: DataUserAuth): Promise<any> {
+    const products = await this.appService.getProducts(userAuth);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -5,6 +5,7 @@ import {
   PorductosModel,
 } from '../../../models/productos/index';
 import { InjectModel } from '@nestjs/mongoose';
+import { DataUserAuth } from '../../../interfaces/userAuth';
 
 @Injectable()
 export class ProductosService {
@@ -29,8 +30,10 @@ export class ProductosService {
     return {};
   }
 
-  async getProducts(): Promise<any> {
+  async getProducts(user: DataUserAuth): Promise<any> {
     const products = await this.productsModel.find().lean();
+    console.log(user.id);
+
     if (!products) return;
 
     return products;
