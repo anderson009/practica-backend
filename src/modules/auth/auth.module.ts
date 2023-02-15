@@ -9,8 +9,8 @@ import { AuthService } from './auth.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([providerUserModel]),
     PassportModule,
+    MongooseModule.forFeature([providerUserModel]),
     JwtModule.register({
       secret: AppConfig.tokenSecret,
       signOptions: {
@@ -20,7 +20,7 @@ import { AuthService } from './auth.service';
     }),
   ],
 
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, PassportModule],
   exports: [AuthService],
 })
 export class AuthModule {}

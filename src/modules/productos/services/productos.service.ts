@@ -12,7 +12,17 @@ export class ProductosService {
   constructor(
     @InjectModel(providerPorductosModel.name)
     private readonly productsModel: typeof PorductosModel,
-  ) {}
+  ) {
+    const DataUserAuth = {
+      id: '63e4ed3ab2929a4b4ae437d0',
+      email: 'ffffff',
+
+      empresa: 'string',
+      img: 'string',
+      role: 'string',
+    };
+  //  this.getProducts(DataUserAuth);
+  }
 
   async createProduct(registerDto: ProductosDto): Promise<any> {
     const { name } = registerDto;
@@ -31,8 +41,8 @@ export class ProductosService {
   }
 
   async getProducts(user: DataUserAuth): Promise<any> {
-    const products = await this.productsModel.find().lean();
-    console.log(user.id);
+    const products = await this.productsModel.find();
+    console.log(user.email);
 
     if (!products) return;
 

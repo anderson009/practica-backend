@@ -26,11 +26,11 @@ export class ProductosController {
     return registerUser;
   }
 
-  @UseGuards(JwtAuthGuard, UserAuth)
+ @UseGuards(JwtAuthGuard)
   @Get('/')
   @HttpCode(200)
   async getProducts(@UserAuth() userAuth: DataUserAuth): Promise<any> {
-    const products = await this.appService.getProducts(userAuth);
+    return await this.appService.getProducts(userAuth);
   }
 
   @UseGuards(JwtAuthGuard)

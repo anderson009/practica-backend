@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DataUserAuth } from './interfaces/userAuth';
@@ -13,6 +14,16 @@ declare global {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe({
+      validationError: {
+        target: false,
+        value: false,
+      },
+      transform: true,
+      whitelist: true,
+    }),
+  );
   app.enableCors({
     origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

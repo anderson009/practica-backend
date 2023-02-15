@@ -5,7 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { AuthService } from './auth.service';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt_users') {
+export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -15,10 +15,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt_users') {
     });
   }
 
-  async validate(
-    request: Request,
-    payload: { sub: string; charId: number },
-  ): Promise<any> {
+  async validate(request: Request, payload: { sub: string }): Promise<any> {
     const result = await this.authService.getDataUser(payload.sub);
 
     if (!result) throw new UnauthorizedException();
