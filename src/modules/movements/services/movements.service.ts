@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
@@ -5,12 +6,11 @@ import {
   MovementsModel,
 } from '../../../models/movements/index';
 import { SalesDto } from '../dto/sales.dto';
-import { Tipos } from '../../../models/movements/type';
+import { Movements, Tipos } from '../../../models/movements/type';
 import {
   providerPorductosModel,
   PorductosModel,
 } from '../../../models/productos/index';
-import { BillsDto } from '../dto/bills.dto';
 
 @Injectable()
 export class MovementsService {
@@ -21,7 +21,7 @@ export class MovementsService {
     private readonly productsModel: typeof PorductosModel,
   ) {}
 
-  async createSales(salesDto: SalesDto): Promise<void> {
+  async createMovements(salesDto: SalesDto): Promise<void> {
     if (salesDto.type === Tipos.VENTAS) {
       await this.ventasModel.create({
         products: salesDto.products,
@@ -43,66 +43,84 @@ export class MovementsService {
     }
   }
 
-  // async getVentas(): Promise<any> {
-  //   const ventas = await this.ventasModel.find().lean();
-  //   if (!ventas) return;
+  async getMovements(): Promise<Movements[]> {
+    const movements: Movements[] = await this.ventasModel.find().lean();
+    return movements;
+  }
 
-  //   return ventas;
-  // }
+  async getMovement(id: any): Promise<Movements> {
+    const movement = await this.ventasModel.findOne({ _id: id }).lean();
 
-  // async getVenta(id: any): Promise<any> {
-  //   const venta = await this.ventasModel.findOne({ _id: id }).lean();
-  //   return venta;
-  // }
+    if (!movement) throw new NotFoundException();
+    let o;
 
-  // async getProducts(id: any): Promise<any> {
-  //   const venta = await this.ventasModel.findOne({ _id: id }).lean();
-  //   const data = venta.products;
-  //   const ids = [];
-  //   const cantidad = [];
-  //   data.filter((el) => {
-  //     ids.push(el.products), cantidad.push(el.cantidad);
-  //   });
+    if (movement.type === 'gastos') {
+      o = {
+        id: movement._id,
+        type: movement.type,
+        total: movement.totals,
+        metodoDePago: movement.metodoDePago,
+        concepto: movement.concepto,
+        categoria: movement.categoria,
+        ganancias: movement.ganancia,
+        fecha: movement.fecha,
+      };
 
-  //   const products = await this.productsModel.find({ _id: ids });
+      return o;
+    }
 
-  //   const list = [];
-  //   for (let index = 0; index < products.length; index++) {
-  //     const element = products[index];
-  //     const obj = {
-  //       name: element.name,
-  //       precioUnitario: element.precioUnitario,
-  //       cantidad: cantidad[index],
-  //       ganancia: element.precioUnitario - element.costoUnitario,
-  //       total: cantidad[index] * element.precioUnitario,
-  //     };
-  //     list.push({ ...obj });
-  //   }
-  //   return list;
-  // }
+    return movement;
+  }
 
-  // async deleteMoviento(id: string): Promise<any> {
-  //   const movomiento = await this.ventasModel.findById({ _id: id });
-  //   if (!movomiento) throw new NotFoundException('kkkk');
+  async getProducts(id: any): Promise<any> {
+    const Movement = await this.ventasModel.findOne({ _id: id }).lean();
 
-  //   await this.ventasModel.findByIdAndDelete({ _id: id });
-  // }
+    const data = Movement.products;
+    const ids = [];
+    const cantidad = [];
+    data.filter((el) => {
+      ids.push(el.products), cantidad.push(el.cantidad);
+    });
 
-  // async updateMovimiento(DTO: VentasDto, id: any): Promise<any> {
-  //   const movimiento = await this.ventasModel.findOne({ _id: id });
-  //   if (!movimiento) throw new NotFoundException();
+    const products = await this.productsModel.find({ _id: ids });
 
-  //   const updateMovimiento = {
-  //     products: DTO.products,
-  //     concepto: DTO.concepto,
-  //     totalVentas: DTO.totalVentas,
-  //     metodoDePago: DTO.metodoDePago,
-  //   };
+    const list = products.map((el: any, i) => {
+      const obj = {
+        name: el.name,
+        precioUnitario: el.precioUnitario,
+        cantidad: cantidad[i],
+        ganancia: el.precioUnitario - el.costoUnitario,
+        total: cantidad[i] * el.precioUnitario,
+      };
 
-  //   await this.ventasModel.findByIdAndUpdate(id, updateMovimiento, {
-  //     new: true,
-  //   });
-  // }
+      return obj;
+    });
+
+    return console.log(list);
+  }
+
+  async deleteMovement(id: string): Promise<any> {
+    const movement = await this.ventasModel.findById({ _id: id });
+    if (!movement) throw new NotFoundException();
+
+    await this.ventasModel.findByIdAndDelete({ _id: id });
+  }
+
+  async updateMovement(DTO: SalesDto, id: any): Promise<any> {
+    const movement = await this.ventasModel.findOne({ _id: id });
+    if (!movement) throw new NotFoundException();
+
+    const updateMovement = {
+      products: DTO.products,
+      concepto: DTO.concepto,
+      totalVentas: DTO.totals,
+      metodoDePago: DTO.metodoDePago,
+    };
+
+    await this.ventasModel.findByIdAndUpdate(id, updateMovement, {
+      new: true,
+    });
+  }
 
   // async getVentasDate(fecha: Date): Promise<any> {
   //   const ventas = await this.ventasModel.find({ fecha }).lean();
