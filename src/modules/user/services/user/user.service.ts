@@ -24,7 +24,7 @@ export class UsersService {
 
     const response: DataUserAuth = {
       id: user._id.toString(),
-      empresa: user.empresa,
+      company: user.company,
       email: user.email,
       img: user.img,
     };

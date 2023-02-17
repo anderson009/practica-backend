@@ -34,7 +34,7 @@ export class LoginController {
     return new LoginEntity({
       img: userData.img,
       role: userData.role,
-      empresa: userData.empresa,
+      company: userData.company,
       token: token,
     });
   }

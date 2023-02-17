@@ -22,7 +22,7 @@ export class RegisterService {
     const createdUser = new this.userModel({
       email,
       password: hashedPassword,
-      empresa: registerDto.empresa,
+      company: registerDto.company,
       img: registerDto.img,
       role: 'user-Role',
     });

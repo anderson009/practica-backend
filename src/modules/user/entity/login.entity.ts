@@ -3,7 +3,7 @@ import { Exclude, Expose } from 'class-transformer';
 @Exclude()
 export class LoginEntity {
   @Expose()
-  empresa: string;
+  company: string;
 
   @Expose()
   role: string;

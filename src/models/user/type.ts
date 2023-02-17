@@ -3,7 +3,7 @@ export type User = {
   _id?: string;
   email: string;
   password: string;
-  empresa: string;
+  company: string;
   role: string;
   img: string;
 };

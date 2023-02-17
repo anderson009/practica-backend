@@ -2,7 +2,7 @@ export interface DataUserAuth {
   id: string;
   email: any;
   token?: number;
-  empresa: string;
+  company: string;
   img: string;
   role?: string;
 }

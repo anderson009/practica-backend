@@ -14,7 +14,7 @@ export const schema = new Schema<User>(
       required: true,
     },
 
-    empresa: {
+    company: {
       type: String,
       required: true,
     },

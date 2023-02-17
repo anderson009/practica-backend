@@ -8,7 +8,7 @@ export class RegisterDto {
   password: string;
 
   @IsNotEmpty()
-  empresa: string;
+  company: string;
 
   img: string;
 }
