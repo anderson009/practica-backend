@@ -12,7 +12,7 @@ import { LoginDto } from '../../dto/login.dto';
 import { LoginEntity } from '../../entity/login.entity';
 import { UsersService } from '../../services/user/user.service';
 
-@Controller('user')
+@Controller('auth')
 export class LoginController {
   constructor(
     private readonly authService: AuthService,
