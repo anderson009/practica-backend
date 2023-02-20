@@ -11,6 +11,10 @@ import {
   providerPorductosModel,
   PorductosModel,
 } from '../../../models/productos/index';
+import { ResultPaginate } from '../../../interfaces/result-paginate';
+import { UtilsService } from '../../utils/utils.service';
+import { QueryFindAllDto } from '../dto/query-request.dto';
+import { FilterQuery, SortOrder } from 'mongoose';
 
 @Injectable()
 export class MovementsService {
@@ -19,6 +23,7 @@ export class MovementsService {
     private readonly ventasModel: typeof MovementsModel,
     @InjectModel(providerPorductosModel.name)
     private readonly productsModel: typeof PorductosModel,
+    private utils: UtilsService,
   ) {}
 
   async createMovements(salesDto: SalesDto): Promise<void> {
@@ -43,9 +48,46 @@ export class MovementsService {
     }
   }
 
-  async getMovements(): Promise<Movements[]> {
-    const movements: Movements[] = await this.ventasModel.find().lean();
-    return movements;
+  async getSales(query: QueryFindAllDto): Promise<ResultPaginate<any>> {
+    const { limit, offset } = this.utils.getPageData(query);
+    let sort: Record<string, SortOrder>;
+
+    const filter: FilterQuery<any> = this.filterPet(query);
+
+    if (query.orderField) {
+      sort = { [query.orderField]: query.orderType == 'asc' ? 1 : -1 };
+    }
+    const [movements, total] = await Promise.all([
+      this.ventasModel.find(filter).limit(limit).skip(offset).sort(sort).lean(),
+      this.ventasModel.countDocuments(filter),
+    ]);
+
+    const y = movements.map((movement) => {
+      if (movement.type === 'gastos') {
+        return {
+          _id: movement._id,
+          type: movement.type,
+          total: movement.totals,
+          metodoDePago: movement.metodoDePago,
+          concepto: movement.concepto,
+          categoria: movement.categoria,
+          fecha: movement.fecha,
+        };
+      }
+
+      if (movement.type === 'ventas') {
+        return movement;
+      }
+    });
+
+    console.log(y);
+
+    return {
+      data: y,
+      total,
+      page: query.page,
+      limit,
+    };
   }
 
   async getMovement(id: any): Promise<Movements> {
@@ -128,4 +170,27 @@ export class MovementsService {
 
   //   return ventas;
   // }
+
+  private filterPet(query: QueryFindAllDto): Record<string, any> {
+    const filter: FilterQuery<any> = {};
+
+    if (query.searchText) {
+      filter.$or = this.utils.searchText(query.searchText, ['concepto']) as any;
+    }
+
+    if (query.filter) {
+      for (const key in query.filter) {
+        if (query.filter[key]) {
+          if (key === 'campo') {
+            // aplicar especial busqueda
+            continue;
+          }
+
+          filter[key] = query.filter[key];
+        }
+      }
+    }
+
+    return filter;
+  }
 }

@@ -54,13 +54,10 @@ export class VentasEntity {
   concepto: string;
 
   @Expose()
-  totalVentas: number;
-
-  @Expose()
   categoria: string;
 
   @Expose()
-  totalGastos: number;
+  totals: number;
 
   @Expose()
   ganancia: number;

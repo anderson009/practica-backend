@@ -8,11 +8,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { QueryFindAllDto } from '../dto/query-request.dto';
 import { SalesDto } from '../dto/sales.dto';
 import { VentasEntity } from '../entity/ventas.entity';
 import { MovementsService } from '../services/movements.service';
@@ -28,23 +30,11 @@ export class MovementsController {
     await this.appService.createMovements(movements);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get('/')
-  async getVentas(): Promise<VentasEntity[]> {
-    const ventas = await this.appService.getMovements();
-    return ventas.map(
-      (el) =>
-        new VentasEntity({
-          id: el._id,
-          categoria: el.categoria,
-          concepto: el.concepto,
-          fecha: el.fecha,
-          metodoDePago: el.metodoDePago,
-          products: el.products,
-          totalGastos: el.totals,
-          type: el.type,
-        }),
-    );
+  async getVentas(@Query() query: QueryFindAllDto): Promise<any> {
+    const ventas = await this.appService.getSales(query);
+    return ventas;
   }
 
   @UseGuards(JwtAuthGuard)
