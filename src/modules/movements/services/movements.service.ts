@@ -62,7 +62,7 @@ export class MovementsService {
       this.ventasModel.countDocuments(filter),
     ]);
 
-    const y = movements.map((movement) => {
+    const data = movements.map((movement) => {
       if (movement.type === 'gastos') {
         return {
           _id: movement._id,
@@ -80,10 +80,8 @@ export class MovementsService {
       }
     });
 
-    console.log(y);
-
     return {
-      data: y,
+      data,
       total,
       page: query.page,
       limit,
