@@ -5,14 +5,13 @@ import {
   HttpCode,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ProductosService } from '../services/productos.service';
 import { ProductosDto } from '../DTO/productos.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { ProductosEntity } from '../entity/productos.entity';
-import { UserAuth } from '../../../decorators/user-auth.decorator';
-import { DataUserAuth } from '../../../interfaces/userAuth';
+import { QueryFindAllDto } from '../DTO/query-request.dto';
 
 @Controller('api/products')
 export class ProductosController {
@@ -26,11 +25,11 @@ export class ProductosController {
     return registerUser;
   }
 
- @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/')
   @HttpCode(200)
-  async getProducts(@UserAuth() userAuth: DataUserAuth): Promise<any> {
-    return await this.appService.getProducts(userAuth);
+  async getProducts(@Query() query: QueryFindAllDto): Promise<any> {
+    return await this.appService.getProducts(query);
   }
 
   @UseGuards(JwtAuthGuard)

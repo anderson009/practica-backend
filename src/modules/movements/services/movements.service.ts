@@ -52,7 +52,7 @@ export class MovementsService {
     const { limit, offset } = this.utils.getPageData(query);
     let sort: Record<string, SortOrder>;
 
-    const filter: FilterQuery<any> = this.filterPet(query);
+    const filter: FilterQuery<any> = this.filterSales(query);
 
     if (query.orderField) {
       sort = { [query.orderField]: query.orderType == 'asc' ? 1 : -1 };
@@ -169,7 +169,7 @@ export class MovementsService {
   //   return ventas;
   // }
 
-  private filterPet(query: QueryFindAllDto): Record<string, any> {
+  private filterSales(query: QueryFindAllDto): Record<string, any> {
     const filter: FilterQuery<any> = {};
 
     if (query.searchText) {
