@@ -15,7 +15,7 @@ import { ResultPaginate } from '../../../interfaces/result-paginate';
 import { UtilsService } from '../../utils/utils.service';
 import { QueryFindAllDto } from '../dto/query-request.dto';
 import { FilterQuery, SortOrder } from 'mongoose';
-import { UpdateCantDto } from '../dto/updateCant';
+import { UpdateCantDto } from '../../productos/DTO/updateCant';
 
 @Injectable()
 export class MovementsService {
@@ -161,22 +161,6 @@ export class MovementsService {
     await this.ventasModel.findByIdAndUpdate(id, updateMovement, {
       new: true,
     });
-  }
-
-  async updateCant(id: any, cantidad: UpdateCantDto): Promise<any> {
-    const product = await this.productsModel.findOne({ _id: id });
-    if (!product) throw new NotFoundException();
-    const newPtoduct = await this.productsModel.findOneAndUpdate(
-      { _id: id },
-      {
-        $inc: {
-          cantidadDisp: -cantidad.cantidad,
-        },
-      },
-      { new: true },
-    );
-
-    return newPtoduct;
   }
 
   // async getVentasDate(fecha: Date): Promise<any> {

@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ProductosDto } from '../DTO/productos.dto';
 import {
   providerPorductosModel,
@@ -10,6 +14,7 @@ import { QueryFindAllDto } from '../DTO/query-request.dto';
 import { ResultPaginate } from '../../../interfaces/result-paginate';
 import { UtilsService } from '../../utils/utils.service';
 import { FilterQuery, SortOrder } from 'mongoose';
+import { UpdateCantDto } from '../DTO/updateCant';
 
 @Injectable()
 export class ProductosService {
@@ -67,6 +72,19 @@ export class ProductosService {
     if (!products) return;
 
     return products;
+  }
+
+  async updateCant(id: any, cantidad: UpdateCantDto): Promise<any> {
+    const product = await this.productsModel.findOne({ _id: id });
+    if (!product) throw new NotFoundException();
+    await this.productsModel.findOneAndUpdate(
+      { _id: id },
+      {
+        $inc: {
+          cantidadDisp: -cantidad.cantidad,
+        },
+      },
+    );
   }
 
   private filterProducts(query: QueryFindAllDto): Record<string, any> {

@@ -5,6 +5,7 @@ import {
   HttpCode,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { ProductosService } from '../services/productos.service';
 import { ProductosDto } from '../DTO/productos.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { QueryFindAllDto } from '../DTO/query-request.dto';
+import { UpdateCantDto } from '../DTO/updateCant';
 
 @Controller('api/products')
 export class ProductosController {
@@ -38,5 +40,14 @@ export class ProductosController {
   async getProduct(@Param('id') id: any): Promise<any> {
     const products = await this.appService.getProduct(id);
     return products;
+  }
+
+  // @UseGuards(JwtAuthGuard)
+  @Put('/cant/:id')
+  async updateCant(
+    @Param('id') id: any,
+    @Body() DTO: UpdateCantDto,
+  ): Promise<any> {
+    await this.appService.updateCant(id, DTO);
   }
 }
