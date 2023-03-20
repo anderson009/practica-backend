@@ -18,6 +18,7 @@ import { QueryFindAllDto } from '../dto/query-request.dto';
 import { SalesDto } from '../dto/sales.dto';
 import { VentasEntity } from '../entity/ventas.entity';
 import { MovementsService } from '../services/movements.service';
+import { UpdateCantDto } from '../dto/updateCant';
 
 @Controller('api/sales')
 export class MovementsController {
@@ -65,6 +66,15 @@ export class MovementsController {
   @Put('/put/:id')
   async putAlumno(@Param('id') id: any, @Body() DTO: SalesDto): Promise<any> {
     await this.appService.updateMovement(DTO, id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('/cant/:id')
+  async updateCant(
+    @Param('id') id: any,
+    @Body() DTO: UpdateCantDto,
+  ): Promise<any> {
+    await this.appService.updateCant(id, DTO);
   }
 
   // @UseGuards(JwtAuthGuard)

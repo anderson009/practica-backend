@@ -25,7 +25,7 @@ export class ProductosController {
     return registerUser;
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('/')
   @HttpCode(200)
   async getProducts(@Query() query: QueryFindAllDto): Promise<any> {
