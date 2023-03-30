@@ -22,7 +22,9 @@ export class ProductosService {
     @InjectModel(providerPorductosModel.name)
     private readonly productsModel: typeof PorductosModel,
     private utils: UtilsService,
-  ) {}
+  ) {
+    console.log(utils);
+  }
 
   async createProduct(registerDto: ProductosDto): Promise<any> {
     const { name } = registerDto;
